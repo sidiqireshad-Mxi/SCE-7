@@ -1635,4 +1635,5 @@ class CurrencyViewModel(
                 }
             }
     }
-}
+} // end companion object
+} // end CurrencyViewModel

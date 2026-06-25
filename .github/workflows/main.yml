@@ -24,12 +24,19 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Show screen file content for debug
+      - name: Fix ViewModel
         run: |
-          echo "=== HistoryScreen.kt lines 34-42 ==="
-          sed -n '34,42p' SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/screens/HistoryScreen.kt
-          echo "=== CalculatorScreen.kt lines 423-430 ==="
-          sed -n '423,430p' SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/screens/CalculatorScreen.kt
+          VM="SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/viewmodel/CurrencyViewModel.kt"
+          echo "Total lines before fix:"
+          wc -l "$VM"
+          echo "Last 5 lines before fix:"
+          tail -5 "$VM"
+          head -n 1639 "$VM" > /tmp/vm.kt
+          mv /tmp/vm.kt "$VM"
+          echo "Total lines after fix:"
+          wc -l "$VM"
+          echo "Last 5 lines after fix:"
+          tail -5 "$VM"
 
       - name: Build Debug APK
         run: |

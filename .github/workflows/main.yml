@@ -24,6 +24,16 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Fix ViewModel closing braces
+        run: |
+          FILE="SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/viewmodel/CurrencyViewModel.kt"
+          OPENS=$(grep -o '{' "$FILE" | wc -l)
+          CLOSES=$(grep -o '}' "$FILE" | wc -l)
+          DIFF=$((OPENS - CLOSES))
+          echo "Open: $OPENS, Close: $CLOSES, Diff: $DIFF"
+          for i in $(seq 1 $DIFF); do echo "}" >> "$FILE"; done
+          echo "Fixed: added $DIFF closing braces"
+
       - name: Build Debug APK
         run: |
           cd SCE-v7/smart-currency-exchange

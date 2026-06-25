@@ -1393,6 +1393,8 @@ class CurrencyViewModel(
         launcherIconVariant.value = variant
         sharedPrefs.edit().putString("launcher_icon_variant", variant).apply()
     }
+
+    private val okHttpClient = okhttp3.OkHttpClient.Builder()
         .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
         .readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
         .build()

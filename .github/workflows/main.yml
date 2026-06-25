@@ -26,12 +26,12 @@ jobs:
 
       - name: Build Debug APK
         run: |
-          cd SCE-v6-final/smart-currency-exchange
+          cd SCE-v7/smart-currency-exchange
           gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: SmartCurrencyExchange-APK
-          path: SCE-v6-final/smart-currency-exchange/app/build/outputs/apk/debug/app-debug.apk
+          path: SCE-v7/smart-currency-exchange/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30

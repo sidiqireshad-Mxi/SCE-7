@@ -1617,8 +1617,9 @@ class CurrencyViewModel(
                 e.printStackTrace()
                 onFailure(e.localizedMessage ?: "Unknown Error")
             }
-        }
+}
     }
+}
 
     // Factory Provider
     companion object {

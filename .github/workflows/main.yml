@@ -27,16 +27,15 @@ jobs:
       - name: Fix ViewModel
         run: |
           VM="SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/viewmodel/CurrencyViewModel.kt"
-          echo "Total lines before fix:"
-          wc -l "$VM"
-          echo "Last 5 lines before fix:"
-          tail -5 "$VM"
+          LINES=$(wc -l < "$VM")
+          echo "Lines: $LINES"
+          echo "Last 3 lines:"
+          tail -3 "$VM"
           head -n 1639 "$VM" > /tmp/vm.kt
+          echo "}" >> /tmp/vm.kt
           mv /tmp/vm.kt "$VM"
-          echo "Total lines after fix:"
-          wc -l "$VM"
-          echo "Last 5 lines after fix:"
-          tail -5 "$VM"
+          echo "Fixed. Last 3 lines now:"
+          tail -3 "$VM"
 
       - name: Build Debug APK
         run: |

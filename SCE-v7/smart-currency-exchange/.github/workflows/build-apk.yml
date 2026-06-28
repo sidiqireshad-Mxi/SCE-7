@@ -24,21 +24,18 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Fix ViewModel extra brace
+      - name: Fix ViewModel last line
         run: |
           VM="SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/viewmodel/CurrencyViewModel.kt"
-          OPENS=$(grep -o '{' "$VM" | wc -l)
-          CLOSES=$(grep -o '}' "$VM" | wc -l)
-          DIFF=$((CLOSES - OPENS))
-          echo "Opens=$OPENS Closes=$CLOSES Diff=$DIFF"
-          if [ $DIFF -gt 0 ]; then
-            TOTAL=$(wc -l < "$VM")
-            echo "Removing $DIFF extra closing braces from end"
-            head -n $((TOTAL - DIFF)) "$VM" > /tmp/vm_fixed.kt
-            mv /tmp/vm_fixed.kt "$VM"
+          LAST=$(tail -1 "$VM")
+          echo "Last line: '$LAST'"
+          echo "Total lines: $(wc -l < $VM)"
+          if [ "$LAST" = "} // end CurrencyViewModel" ]; then
+            sed -i '$d' "$VM"
+            echo "Removed last line"
           fi
-          echo "Done. Last 3 lines:"
-          tail -3 "$VM"
+          echo "New last line: '$(tail -1 $VM)'"
+          echo "New total: $(wc -l < $VM)"
 
       - name: Build Debug APK
         run: |

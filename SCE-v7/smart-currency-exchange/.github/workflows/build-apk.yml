@@ -24,38 +24,21 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Fix ViewModel
+      - name: Fix ViewModel extra brace
         run: |
           VM="SCE-v7/smart-currency-exchange/app/src/main/java/com/example/ui/viewmodel/CurrencyViewModel.kt"
-          python3 - "$VM" << 'PYEOF'
-          import sys
-          f = sys.argv[1]
-          with open(f, 'r') as fp:
-              content = fp.read()
-          opens = content.count('{')
-          closes = content.count('}')
-          diff = opens - closes
-          print(f"Open={opens} Close={closes} Diff={diff}")
-          if diff < 0:
-              lines = content.splitlines()
-              removed = 0
-              for i in range(len(lines)-1, -1, -1):
-                  if lines[i].strip() == '}' and removed < abs(diff):
-                      print(f"Removing line {i+1}: {repr(lines[i])}")
-                      lines.pop(i)
-                      removed += 1
-              content = '\n'.join(lines) + '\n'
-              with open(f, 'w') as fp:
-                  fp.write(content)
-              print(f"Removed {removed} extra braces")
-          elif diff > 0:
-              with open(f, 'a') as fp:
-                  for _ in range(diff):
-                      fp.write('\n}')
-              print(f"Added {diff} closing braces")
-          else:
-              print("Braces balanced - no fix needed")
-          PYEOF
+          OPENS=$(grep -o '{' "$VM" | wc -l)
+          CLOSES=$(grep -o '}' "$VM" | wc -l)
+          DIFF=$((CLOSES - OPENS))
+          echo "Opens=$OPENS Closes=$CLOSES Diff=$DIFF"
+          if [ $DIFF -gt 0 ]; then
+            TOTAL=$(wc -l < "$VM")
+            echo "Removing $DIFF extra closing braces from end"
+            head -n $((TOTAL - DIFF)) "$VM" > /tmp/vm_fixed.kt
+            mv /tmp/vm_fixed.kt "$VM"
+          fi
+          echo "Done. Last 3 lines:"
+          tail -3 "$VM"
 
       - name: Build Debug APK
         run: |
